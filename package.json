@@ -2,7 +2,7 @@
     "name": "awarest-align",
     "displayName": "awarest-align",
     "description": "Code and syntax alignment helpers",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "license": "https://github.com/awarest/vscode-awarest-align/blob/master/LICENSE",
     "bugs": {
         "url": "https://github.com/awarest/vscode-awarest-align/issues"
