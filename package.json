@@ -33,8 +33,7 @@
     "keybindings": [
       {
         "command": "extension.awarestAlignWhitespace",
-        "key": "meta+space",
-        "when": "editorHasSelection"
+        "key": "meta+space"
       }
     ]
   },
@@ -52,6 +51,7 @@
     "@types/mocha": "^2.2.32"
   },
   "keywords": [
+    "awarest",
     "align",
     "alignment",
     "format",
