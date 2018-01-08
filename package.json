@@ -1,69 +1,42 @@
 {
-    "name": "awarest-align",
-    "displayName": "awarest-align",
-    "description": "Code and syntax alignment helpers",
-    "version": "0.4.0",
-    "license": "https://github.com/awarest/vscode-awarest-align/blob/master/LICENSE",
-    "bugs": {
-        "url": "https://github.com/awarest/vscode-awarest-align/issues"
-    },
-    "homepage": "https://github.com/awarest/vscode-awarest-align/blob/master/README.md",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/awarest/vscode-awarest-align"
-    },
-    "publisher": "awarest",
-    "engines": {
-        "vscode": "^1.15.0"
-    },
-    "categories": [
-        "Formatters"
-    ],
-    "activationEvents": [
-        "onCommand:extension.awarestAlignLinebreaks",
-        "onCommand:extension.awarestAlignWhitespace"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "extension.awarestAlignLinebreaks",
-                "title": "Awarest Align Linebreaks"
-            },
-            {
-                "command": "extension.awarestAlignWhitespace",
-                "title": "Awarest Align Whitespace"
-            }
-        ],
-        "keybindings": [
-            {
-                "command": "extension.awarestAlignLinebreaks",
-                "key": "meta+enter"
-            },
-            {
-                "command": "extension.awarestAlignWhitespace",
-                "key": "meta+space"
-            }
-        ]
-    },
-    "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.0.3",
-        "vscode": "^1.0.0",
-        "mocha": "^2.3.3",
-        "@types/node": "^6.0.40",
-        "@types/mocha": "^2.2.32"
-    },
-    "keywords": [
-        "align",
-        "alignment",
-        "format",
-        "formatting",
-        "whitespace"
+  "name": "awarest-align",
+  "icon": "imgs/awarest-128x128.png",
+  "displayName": "awarest-align",
+  "description": "Code and syntax alignment helpers",
+  "version": "1.0.1",
+  "license": "https://github.com/awarest/vscode-awarest-align/blob/master/LICENSE",
+  "bugs": { "url": "https://github.com/awarest/vscode-awarest-align/issues" },
+  "homepage": "https://github.com/awarest/vscode-awarest-align/blob/master/README.md",
+  "repository": { "type": "git", "url": "https://github.com/awarest/vscode-awarest-align" },
+  "publisher": "awarest",
+  "engines": { "vscode": "^1.15.0" },
+  "categories": [ "Formatters" ],
+  "activationEvents": [
+    "onCommand:extension.awarestAlignEach",
+    "onCommand:extension.awarestAlignFirst",
+    "onCommand:extension.awarestAlignLines",
+    "onCommand:extension.awarestAlignList"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      { "command": "extension.awarestAlignEach",  "title": "Awarest Align Each Occurrence"  },
+      { "command": "extension.awarestAlignFirst", "title": "Awarest Align First Occurrence" },
+      { "command": "extension.awarestAlignLines", "title": "Awarest Align Transpose Lines"  },
+      { "command": "extension.awarestAlignList",  "title": "Awarest Align Transpose List"   }
     ]
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "mocha": "^2.3.3",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
+  },
+  "keywords": [ "align", "alignment", "format", "formatting", "whitespace" ]
 }
