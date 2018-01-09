@@ -11,18 +11,6 @@ your own set of keyboard shortcuts. This is intended to be a semi-opinionated ap
 some obvious room for improvement. Please open an [issue] on [GitHub] if you believe something
 should be different or configurable and we can discuss a PR or I'll make a quick change.
 
-## Selections
-
-Commands function differently depending on if you have a single line or multiple lines
-selected. They will function in "single line" mode if you have nothing selected (it acts on the
-line your cursor is on) or your selection only contains portions of a single line and your
-cursor is at the start of the following line. Also, they always work based on "whole lines"
-only. That means if part of a line is selected, the entire line is handled.
-
-![alt text](/imgs/single-line.gif "Single Line Examples")
-
-![alt text](/imgs/multi-line.gif "Multi Line Examples")
-
 ## Commands
 
 Each of the four main commands behave differently depending on if a single line or multiple
@@ -82,6 +70,18 @@ added for each item when transforming into multiple lines. Blank lines or repeat
 split only by whitespace are generally eliminated.
 
 ![alt text](/imgs/list.gif "Transpose List Examples")
+
+## Selections
+
+Commands function differently depending on if you have a single line or multiple lines
+selected. They will function in "single line" mode if you have nothing selected (it acts on the
+line your cursor is on) or your selection only contains portions of a single line and your
+cursor is at the start of the following line. Also, they always work based on "whole lines"
+only. That means if part of a line is selected, the entire line is handled.
+
+![alt text](/imgs/single-line.gif "Single Line Examples")
+
+![alt text](/imgs/multi-line.gif "Multi Line Examples")
 
 ## Keybindings
 
@@ -162,6 +162,12 @@ You can find me on Twitter as @brian_jorden
 [annsk/vscode-alignment]: https://github.com/annsk/vscode-alignment
 
 ## Release Notes
+
+---
+
+### 1.0.2 - (2018-01-08)
+
+* Minor tweak to order of information in README.md for clarity
 
 ---
 
