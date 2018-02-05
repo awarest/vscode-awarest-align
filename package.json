@@ -3,7 +3,7 @@
   "icon": "imgs/awarest-128x128.png",
   "displayName": "awarest-align",
   "description": "Code and syntax alignment helpers",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "https://github.com/awarest/vscode-awarest-align/blob/master/LICENSE",
   "bugs": { "url": "https://github.com/awarest/vscode-awarest-align/issues" },
   "homepage": "https://github.com/awarest/vscode-awarest-align/blob/master/README.md",
@@ -15,15 +15,34 @@
     "onCommand:extension.awarestAlignEach",
     "onCommand:extension.awarestAlignFirst",
     "onCommand:extension.awarestAlignLines",
-    "onCommand:extension.awarestAlignList"
+    "onCommand:extension.awarestAlignList",
+    "onCommand:extension.awarestAlignHtml"
   ],
   "main": "./out/src/extension",
   "contributes": {
+    "configuration": {
+      "title": "Awarest Align",
+      "properties": {
+        "awarestAlign.tab": {
+          "type": "string",
+          "default": "  ",
+          "scope": "resource",
+          "description": "Characters to use when inserting extra indentation for a list or html. Should be able to replace with 4 spaces or \\t if you need a tab instead."
+        },
+        "awarestAlign.eol": {
+          "type": "string",
+          "default": "\n",
+          "scope": "resource",
+          "description": "Characters used when adding or replacing a removed line break (happens a lot, be sure this is right). The Windows version would be: \\r\\n"
+        }
+      }
+    },
     "commands": [
       { "command": "extension.awarestAlignEach",  "title": "Awarest Align Each Occurrence"  },
       { "command": "extension.awarestAlignFirst", "title": "Awarest Align First Occurrence" },
       { "command": "extension.awarestAlignLines", "title": "Awarest Align Transpose Lines"  },
-      { "command": "extension.awarestAlignList",  "title": "Awarest Align Transpose List"   }
+      { "command": "extension.awarestAlignList",  "title": "Awarest Align Transpose List"   },
+      { "command": "extension.awarestAlignHtml",  "title": "Awarest Align Transpose HTML"   }
     ]
   },
   "scripts": {

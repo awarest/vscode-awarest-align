@@ -1,6 +1,6 @@
 # vscode-awarest-align
 
-Alignment and formatting helpers for whitespace, symbols, and transposing.
+Alignment and formatting helpers for whitespace, symbols, and transposing. ([Marketplace]) ([GitHub])
 
 ## Overview
 
@@ -71,6 +71,16 @@ split only by whitespace are generally eliminated.
 
 ![alt text](/imgs/list.gif "Transpose List Examples")
 
+**Transpose HTML** - Works in a similar way to the Transpose Lines or List items above, but has
+some special handling for working with HTML tags and multiple attributes. When transposing into
+multiple lines, it will add an extra indent to each property. Also, if the last characters are
+either `/>` or `>`, they will be split onto their own line without the additional indentation.
+When merging down to a single line, each line break gets converted into a space, except the
+space just prior to `/>` or `>` gets stripped out to snug things up nicely. Importantly, spaces
+within single or double quoted areas are ignored when deciding how to wrap into new lines.
+
+![alt text](/imgs/html.gif "Transpose HTML Examples")
+
 ## Selections
 
 Commands function differently depending on if you have a single line or multiple lines
@@ -96,32 +106,38 @@ a keyboard shortcut if you would like to test things first.
 | extension.awarestAlignFirst | Awarest Align First Occurrence |
 | extension.awarestAlignLines | Awarest Align Transpose Lines  |
 | extension.awarestAlignList  | Awarest Align Transpose List   |
+| extension.awarestAlignHtml  | Awarest Align Transpose HTML   |
 
 **Keybinding Examples and Suggestions:**
 
 ```json
-  { "key": "meta+/",     "command": "extension.awarestAlignFirst", "args": "//" },
-  { "key": "meta+;",     "command": "extension.awarestAlignFirst", "args": ": " },
-  { "key": "meta+space", "command": "extension.awarestAlignEach",  "args": " "  },
-  { "key": "meta+,",     "command": "extension.awarestAlignList",  "args": ","  },
-  { "key": "meta+enter", "command": "extension.awarestAlignLines", "args": " "  },
+  { "key": "meta+/",          "command": "extension.awarestAlignFirst", "args": "//" },
+  { "key": "meta+;",          "command": "extension.awarestAlignFirst", "args": ": " },
+  { "key": "meta+space",      "command": "extension.awarestAlignEach",  "args": " "  },
+  { "key": "meta+,",          "command": "extension.awarestAlignList",  "args": ","  },
+  { "key": "meta+.",          "command": "extension.awarestAlignHtml",  "args": " "  },
+  { "key": "meta+enter",      "command": "extension.awarestAlignLines", "args": " "  },
+  { "key": "meta+ctrl+space", "command": "extension.awarestAlignFirst", "args": " "  },
 ```
 
 **Note:** The `meta` key is also known as the Windows Key or Command (⌘) on MacOS
 
-## Assumptions
+## Settings
 
-It keeps things simplier for everyone if some general assumptions work for the vast majority of
-people by reducing configuration and any code complexity. If any of these don't work in your
-situation, please open a quick issue on GitHub as they are mostly pretty straight forward to
-update or handle through a configuration option if people actually need something different.
+The EOL (end of line aka linebreak) and TAB values are now configurable through your typical
+user or workspace settings. The defaults are for unix style (LF aka `\n`) EOL and two spaces
+for tabs (used when transposing a list or html). Be sure to configure the EOL if you are on
+Windows (CRLF aka `\r\n`) or using non-unix style for any other reason. That value gets used
+a lot to replace EOLs that get trimmed when cleaning up text in general.
 
-**Linebreaks** - Any insertion of line breaks use the Linux style End of Line (`\n` aka `LF`),
-but this could be an issue for Windows style End of Line (`\r\n` aka `CRLF`).
+```json
+  "awarestAlign.eol": "\n",   // default
+  "awarestAlign.eol": "\r\n", // windows eol
 
-**Tabs** - Tabs are expected to be two spaces. Indentation preserving could be an issue if you
-use real "tabs" instead of tabs being converted to spaces. Also, the two spaces are used when
-indenting the items of a list being transposed.
+  "awarestAlign.tab": "  ",   // default
+  "awarestAlign.tab": "\t",   // tab character
+  "awarestAlign.tab": "    ", // four space tabs
+```
 
 ## Known Issues
 
@@ -129,7 +145,6 @@ indenting the items of a list being transposed.
 * Preserving Spacing in Quoted Strings - currently does not handle quoted strings differently
 * Escape Character/Symbol Support - i.e. currently isn't a way to ignore a comma inside quotes
 * Partial Line Selections - if part of a line is selected, the entire line is always impacted
-* Default Keybindings - (removing) seems there may be some keybinding conflicts on other OSes
 
 ## Learning
 
@@ -154,6 +169,7 @@ Also referenced and learned a lot from the VS Code extension [annsk/vscode-align
 You can find me on Twitter as @brian_jorden
 
 <!-- links -->
+[Marketplace]: https://marketplace.visualstudio.com/items?itemName=awarest.awarest-align
 [GitHub]: https://github.com/awarest/vscode-awarest-align
 [issue]: https://github.com/awarest/vscode-awarest-align/issues
 [package.json]: https://github.com/awarest/vscode-awarest-align/blob/master/package.json
@@ -162,6 +178,17 @@ You can find me on Twitter as @brian_jorden
 [annsk/vscode-alignment]: https://github.com/annsk/vscode-alignment
 
 ## Release Notes
+
+---
+
+### 1.1.0 - (2018-02-05)
+
+* Changed the TAB and EOL values to be pulled from configuration instead of hard coded
+* New default settings provided (for above mentioned TAB/EOL)
+* Added a new Transpose mode to better work with HTML with multiple attributes
+* As part of the HTML functionality, created a basic way to ignore spaces inside quotes
+* Future update still needed to fully handle spaces inside quotes for other alignment modes
+* Added links to the GitHub repo and Marketplace listing to the start of the README file
 
 ---
 

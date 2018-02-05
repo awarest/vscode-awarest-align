@@ -1,18 +1,27 @@
 'use strict'
 import * as vscode from 'vscode'
 
-const TAB = '  '
 const EMPTY = ''
 const SPACE = ' '
-const NEWLINE = '\n' // may need tweaked for win/mac
-const LINEBREAK = /\r\n|\r|\n/
+
+const LINEBREAK  = /\r\n|\r|\n/
 const WHITESPACE = '\\s'
+
+const NON_QUOTED_SPACES = /[^\s"]*"([^"]*)"|[^\s']*'([^']*)'|[^\s"']+/g
+
+const SPACE_CLOSE_ANGLE       = /\s\>/g   // finds all " >"  values in a string
+const SPACE_SLASH_CLOSE_ANGLE = /\s\/\>/g // finds all " />" values in a string
+
 
 class Awarest {
 
-  static transpose (separator: string, list: boolean) {
+  static transpose (separator: string, list: boolean, html: boolean = false) {
     const editor = vscode.window.activeTextEditor
     if (!editor || !separator) { return }
+
+    const CONFIG = vscode.workspace.getConfiguration('awarestAlign', editor.document.uri)
+    const TAB = CONFIG.get('tab') + ''
+    const EOL = CONFIG.get('eol') + ''
 
     // find our range definition and our actual selected text
     let range = Awarest.getRange(editor.selections[0])
@@ -33,18 +42,39 @@ class Awarest {
     if (Awarest.isOneLine(range)) {
       // get rid of any repeating separators so we don't get extra blank lines
       text = Awarest.dedupe(text, separator)
+
       // we will end up with one line for each time the separator was found
-      lines = text.split(separator)
+      // added separate handling depending on if we are doing html or not
+      lines = (html ? text.match(NON_QUOTED_SPACES) : text.split(separator))
+
       // add the separator back to the end of each line, make sure it is trimmed,
       // then we will add the indent back to the start of each line
       lines.forEach((line, index) => {
         // if the line would be blank, we don't want/need a separator or blank spaces
         if (!line.trim()) { return lines[index] = EMPTY }
         // assign the line with extra tab for a list, always with indent, adding the separator
-        lines[index] = (list ? TAB : EMPTY) + indent + (line + separator).trim()
+        lines[index] = (list || html ? TAB : EMPTY) + indent + (line + separator).trim()
       })
+
+      if (html) {
+        lines[0] = indent + lines[0].trim()
+        let last = lines.pop().trim()
+        if (last.endsWith('>')) {
+          if (last.endsWith('/>')) {
+            if (last.length > 2) { lines.push(indent + TAB + last.slice(0, -2)) }
+            last = '/>'
+          } else {
+            if (last.length > 1) { lines.push(indent + TAB + last.slice(0, -1)) }
+            last = '>'
+          }
+        } else {
+          last = TAB + last
+        }
+        lines.push(indent + last)
+      }
+
       // create our final output by joining every line into a string split by newlines
-      final = lines.join(NEWLINE)
+      final = lines.join(EOL)
 
       // special handling if we are dealing with a list
       if (list) {
@@ -59,7 +89,7 @@ class Awarest {
         if (opening > -1) {
           final = ''
             + final.slice(0, opening + 1).trim()
-            + NEWLINE
+            + EOL
             + indent
             + TAB
             + final.slice(opening + 1).trim()
@@ -74,7 +104,7 @@ class Awarest {
           final = ''
             + final.slice(0, closing).trim()
             + separator
-            + NEWLINE
+            + EOL
             + indent
             + final.slice(closing, -separator.length)
         }
@@ -112,19 +142,28 @@ class Awarest {
           final = final.substring(0, last).trim() + final.substring(last + separator.length)
         }
       }
+
+      if (html) {
+        final = final.replace(SPACE_SLASH_CLOSE_ANGLE, '/>')
+        final = final.replace(SPACE_CLOSE_ANGLE, '>')
+      }
+
       // trim any whitespace, then add our indent back onto the start
       final = indent + final
     }
 
     // time to actually write the text back to the editor and adding the
     // final linebreak that got trimmed off in our proccessing
-    editor.edit((editBuilder) => { editBuilder.replace(range, final + NEWLINE) })
+    editor.edit((editBuilder) => { editBuilder.replace(range, final + EOL) })
   }
 
 
   static characters (characters: string, first: boolean) {
     const editor = vscode.window.activeTextEditor
     if (!editor || !characters) { return }
+
+    const CONFIG = vscode.workspace.getConfiguration('awarestAlign', editor.document.uri)
+    const EOL = CONFIG.get('eol')
 
     // the joiner between each part, only pad with a space if it isn't already one
     const JOINER = '' + (characters.startsWith(SPACE) ? EMPTY : SPACE) + characters
@@ -164,7 +203,7 @@ class Awarest {
           })
         }
         // we need to put the indentation and the newline back on that got stripped by trimming
-        final = [SPACE.repeat(indent) + cleaned + NEWLINE]
+        final = [SPACE.repeat(indent) + cleaned + EOL]
       } else {
         // loop over each line, cleaning up the actual line and splitting into parts
         editor.document.getText(range).split(LINEBREAK).forEach((line) => {
@@ -258,6 +297,7 @@ export function deactivate() {}
 // this gets called the first time you trigger one of the events listed in the package.json
 // file under activationEvents, basically gets called once per session only IF they use it
 export function activate (context: vscode.ExtensionContext) {
+
   context.subscriptions.push(
 
     vscode.commands.registerCommand('extension.awarestAlignEach', (characters) => {
@@ -290,6 +330,10 @@ export function activate (context: vscode.ExtensionContext) {
           .then(input => Awarest.transpose(input, true))
       }
       Awarest.transpose(separator, true)
+    }),
+
+    vscode.commands.registerCommand('extension.awarestAlignHtml', (separator) => {
+      Awarest.transpose(separator, false, true)
     }),
 
   )
